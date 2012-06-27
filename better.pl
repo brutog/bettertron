@@ -149,14 +149,37 @@ for my $href ( @{$better->{'response'}} )
 	
 	if($existing_encodes{'320'} == 1 && $existing_encodes{'V0'} == 1 && $existing_encodes{'V2'} == 1)
 	{
-		print "Nothing to transcode. V2,V0, and 320 exist";
+		print "Nothing to transcode. V2, V0, and 320 exist";
 	}
 	else
 	{
 		print "Running transcode with these options: $command\n";
 		#system($command);
 	}
+	$addformat_url = "http://what.cd/upload.php?groupid=" . $groupId;
+	$mech -> get($addformat_url);
 
+	
+	#time to do the form post for uploading the torrent
+	#if $remasterTitle is blank, we don't have to fill out edition info. 
+	if($remasterTitle = '')
+	{
+		
+
+		$mech->submit_form(
+		form_id => 'upload_table',
+		fields =>
+		{
+		username=>$username,
+		password=>$password
+		}
+	else
+	{
+		
+	}
+	
+);	
+	
 	sleep 2;
 	print "----------------------------------------------\n";
 }
