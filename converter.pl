@@ -6,7 +6,7 @@ use File::Basename qw/basename/;
 use File::Find qw/find/;
 use File::Path qw/mkpath/;
 use File::Copy qw/copy/;
-use Config::IniFiles
+use Config::IniFiles;
 use WWW::Mechanize;
 use JSON -support_by_pp;
 use JSON qw( decode_json );
