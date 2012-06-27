@@ -7,8 +7,11 @@ bettertron uses several command line tools that are expected to exist:
 If you are running ubuntu/debian, this should get all of them:
 
 apt-get install mktorrent flac lame
+---------------------------------------------------------------------
+This project using some pre-existing perl modules from CPAN. To install them in Ubuntu in one line:
 
-
+perl -MCPAN -e 'install WWW::Mechanize, JSON, JSON::XS, Data::Dumper, Config::IniFiles, Bencode'
+---------------------------------------------------------------------
 After that, simply fill out the values in better.ini:
 
 username and password refer to your what.cd username and password
