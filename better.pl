@@ -85,53 +85,59 @@ for my $href ( @{$better->{'response'}} )
 	
 
 	print Dumper $group;
+	my $remasterTitle;
 
 	for my $torrents( @{$group->{'response'}{'torrents'}} )
 	{
-		if($torrent -> {'id'} eq $torrentId)
+		if($torrents -> {'id'} eq $torrentId)
 		{
-			$remasterTitle = $torrent -> {'remasterTitle'}; 
+			$remasterTitle = $torrents -> {'remasterTitle'}; 
 		}
 		
 	}
 
-	%existing_encodes = 
+	my %existing_encodes = 
 	(
         320 => '0',
         V0 => '0',
         V2 => '0',
     	);
-		
+
+	if(!defined $remasterTitle)
+	{
+		$remasterTitle = '';
+	}
+	
 	for my $torrents( @{$group->{'response'}{'torrents'}} )
         {
-                if($torrent -> {'remasterTitle'} eq $remasterTitle)
+                if($torrents -> {'remasterTitle'} eq $remasterTitle)
                 {
-			if($torrent -> {'encoding'} eq '320'
+			if($torrents -> {'encoding'} eq '320')
 			{
-				$existing_encodes -> {'320'} = 1;
+				$existing_encodes{'320'} = 1;
 			}
-			if($torrent -> {'encoding'} eq 'V0'
+			if($torrents -> {'encoding'} eq 'V0 (VBR)')
                         {
-                                $existing_encodes -> {'V0'} = 1;
+                                $existing_encodes{'V0'} = 1;
                         }
-			if($torrent -> {'encoding'} eq 'V2'
+			if($torrents -> {'encoding'} eq 'V2 (VBR)')
                         {
-                                $existing_encodes -> {'V2'} = 1;
+                                $existing_encodes{'V2'} = 1;
                         }
                 }
 
         }	
-		my $command = "perl alt.pl ";
+	my $command = "perl converter.pl ";
 
-	if($existing_encodes -> {'320'} = 0)
+	if($existing_encodes{'320'} == 0)
 	{
 		$command .= "--320 ";
 	}
-	if($existing_encodes -> {'V0'} = 0)
+	if($existing_encodes{'V0'} == 0)
         {
                 $command .= "--V0 ";
         }
-	if($existing_encodes -> {'V2'} = 0)
+	if($existing_encodes{'V2'} == 0)
         {
                 $command .= "--V2 ";
         }
@@ -141,9 +147,16 @@ for my $href ( @{$better->{'response'}} )
 	$command .= $torrentName;
 	$command .= "\"";
 	
-	print "Running transcode with these options: $command\n";
-	#system("$command");
-	
+	if($existing_encodes{'320'} == 1 && $existing_encodes{'V0'} == 1 && $existing_encodes{'V2'} == 1)
+	{
+		print "Nothing to transcode. V2,V0, and 320 exist";
+	}
+	else
+	{
+		print "Running transcode with these options: $command\n";
+		#system($command);
+	}
+
 	sleep 2;
 	print "----------------------------------------------\n";
 }

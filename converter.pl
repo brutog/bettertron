@@ -53,7 +53,7 @@ password=>$password
 }
 );
 my $login_info = decode_json($mech -> content());
-my $passkey = $login_info->{'response'}{'passkey'};
+$passkey = $login_info->{'response'}{'passkey'};
 
 
 # List of default encoding options, add to this list if you want more
