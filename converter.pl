@@ -6,6 +6,11 @@ use File::Basename qw/basename/;
 use File::Find qw/find/;
 use File::Path qw/mkpath/;
 use File::Copy qw/copy/;
+use Config::IniFiles
+use WWW::Mechanize;
+use JSON -support_by_pp;
+use JSON qw( decode_json );
+use Data::Dumper;
 use Getopt::Long;
 Getopt::Long::Configure("permute");
 
@@ -20,18 +25,36 @@ my ($verbose, $notorrent, $zeropad, $moveother, $output, $passkey, $torrent_dir)
 
 ### VERSION 2.0
 
+my $cfg = Config::IniFiles->new( -file => "better.ini" );
+
 # Do you always want to move additional files (.jpg, .log, etc)?
 $moveother = 1;
 
-# Output folder unless specified: ("/home/samuel/Desktop/")
-$output = "/media/mega/seedbox/data-better/";
+my $username = $cfg -> val('user', 'username');
+my $password = $cfg -> val('user', 'password');
 
+# Output folder unless specified: ("/home/samuel/Desktop/")
+$output = $cfg -> val('dirs', 'transcodedir');
+$torrent_dir = $cfg -> val('dirs', 'torrentdir');
 # Do you want to zeropad tracknumber values? (1 => 01, 2 => 02 ...)
 $zeropad = 1;
 
 # Specify torrent passkey
-$passkey = "7gnp2u5r6mb7uewe606hvtlh8kc887xh";
-$torrent_dir = "/media/mega/torrent/created/";
+my $login_url = 'http://what.cd/ajax.php?action=index';
+my $mech = WWW::Mechanize->new();
+$mech -> cookie_jar(HTTP::Cookies->new());
+$mech -> get($login_url);
+$mech->submit_form(
+form_id => 'loginform',
+fields =>
+{
+username=>$username,
+password=>$password
+}
+);
+my $login_info = decode_json($mech -> content());
+my $passkey = $login_info->{'response'}{'passkey'};
+
 
 # List of default encoding options, add to this list if you want more
 my %lame_options = (

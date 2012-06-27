@@ -1,0 +1,18 @@
+bettertron uses several command line tools that are expected to exist:
+
+*lame
+*flac
+*mktorrent
+
+If you are running ubuntu/debian, this should get all of them:
+
+apt-get install mktorrent flac lame
+
+
+After that, simply fill out the values in better.ini:
+
+username and password refer to your what.cd username and password
+
+torrentdir is where bettertron will create torrents for your transcodes
+flacdir is where bettertron will look for your already existing and seeded flacs
+transcodedir is where your flac transcodes will end up

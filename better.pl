@@ -6,11 +6,16 @@ use JSON -support_by_pp;
 use JSON qw( decode_json );
 use Data::Dumper;
 use Bencode qw(bdecode);
+use Config::IniFiles;
 
 
-#please enter your what.cd username and password here
-my $username = "";
-my $password = "";
+my $cfg = Config::IniFiles->new( -file => "better.ini" );
+
+#Get username and password from config file.
+my $username = $cfg -> val('user', 'username');
+my $password = $cfg -> val('user', 'password');
+
+my $flacdir = $cfg -> val('dirs', 'flacdir');
 
 my $login_url = 'http://what.cd/ajax.php?action=index';
 my $mech = WWW::Mechanize->new();
@@ -55,7 +60,7 @@ for my $href ( @{$better->{'response'}} )
 	{
 		die( "Could not create file: $!" );
 	}
-	#binmode( FOUT ); # required for Windows
+	#binmode( FOUT ); # required for Windows. Who uses Windows?
 	print( FOUT $mech->response->content() );
 	close( FOUT );	
 	
@@ -81,8 +86,64 @@ for my $href ( @{$better->{'response'}} )
 
 	print Dumper $group;
 
-	#$group->
+	for my $torrents( @{$group->{'response'}{'torrents'}} )
+	{
+		if($torrent -> {'id'} eq $torrentId)
+		{
+			$remasterTitle = $torrent -> {'remasterTitle'}; 
+		}
+		
+	}
 
+	%existing_encodes = 
+	(
+        320 => '0',
+        V0 => '0',
+        V2 => '0',
+    	);
+		
+	for my $torrents( @{$group->{'response'}{'torrents'}} )
+        {
+                if($torrent -> {'remasterTitle'} eq $remasterTitle)
+                {
+			if($torrent -> {'encoding'} eq '320'
+			{
+				$existing_encodes -> {'320'} = 1;
+			}
+			if($torrent -> {'encoding'} eq 'V0'
+                        {
+                                $existing_encodes -> {'V0'} = 1;
+                        }
+			if($torrent -> {'encoding'} eq 'V2'
+                        {
+                                $existing_encodes -> {'V2'} = 1;
+                        }
+                }
+
+        }	
+		my $command = "perl alt.pl ";
+
+	if($existing_encodes -> {'320'} = 0)
+	{
+		$command .= "--320 ";
+	}
+	if($existing_encodes -> {'V0'} = 0)
+        {
+                $command .= "--V0 ";
+        }
+	if($existing_encodes -> {'V2'} = 0)
+        {
+                $command .= "--V2 ";
+        }
+
+	$command .= "\"";
+	$command .= $flacdir;
+	$command .= $torrentName;
+	$command .= "\"";
+	
+	print "Running transcode with these options: $command\n";
+	#system("$command");
+	
 	sleep 2;
 	print "----------------------------------------------\n";
 }
