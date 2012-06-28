@@ -114,9 +114,13 @@ sub process
         my $group = decode_json($mech -> content());
 
 
-        print Dumper $group;
-        my $remasterTitle;
-	my $torrentName;
+        #print Dumper $group;
+        my $remasterTitle = '';
+	my $remasterYear = '';
+	my $remasterRecordLabel = '';
+	my $remasterCatalogueNumber = '';
+	my $media = '';
+	my $torrentName = '';
 
         for my $torrents( @{$group->{'response'}{'torrents'}} )
         {
@@ -124,7 +128,11 @@ sub process
                 {
                         $remasterTitle = $torrents -> {'remasterTitle'};
 			$torrentName = $torrents -> {'filePath'};
-                }
+			$remasterYear = $torrents -> {'remasterYear'};
+			$remasterRecordLabel = $torrents -> {'remasterRecordLabel'};
+			$remasterCatalogueNumber = $torrents -> {'remasterCatalogueNumber'};
+                	$media = $torrents -> {'media'};
+		}
 
         }
 	print "RemasterTitle: $remasterTitle\n";
@@ -136,10 +144,6 @@ sub process
         V2 => '0',
         );
 
-        if(!defined $remasterTitle)
-        {
-                $remasterTitle = '';
-        }
 
         for my $torrents( @{$group->{'response'}{'torrents'}} )
         {
@@ -187,7 +191,7 @@ sub process
 	else
         {
                 print "Running transcode with these options: $command\n";
-                system($command);
+                #system($command);
         }
         my $addformat_url = "http://what.cd/upload.php?groupid=" . $groupId;
         $mech -> get($addformat_url);
@@ -198,39 +202,70 @@ sub process
         while ( (my $key, my $value) = each %existing_encodes )
 	{
 
-		my $formDropdown;
-		
+		my $bitrateDropdown = '';
+		print "key: $key | value: $existing_encodes{$key}\n";
 		if ($existing_encodes{$key} == 0)
 		{
-			$formDropdown = $key . "(VBR)";	
+			if($key eq 'V0' || $key eq 'V2')
+			{
+				$bitrateDropdown = $key . " (VBR)";	
+			}
+			else
+			{
+				$bitrateDropdown = $key;
+			}
 			#determine torrent file name
 			my $torrentFile = $torrentName . " (" . $key . ").torrent";
 
 			my $add_format_url = "http://what.cd/upload.php?groupid=" . $groupId;
 			
-			if($remasterTitle eq '')
+			my $uploadFile = [ 
+    			$torrentFile,        # The file we are uploading to upload.
+    			$torrentFile,     # The filename we want to give the web server.
+    			'Content-type' => 'text/plain' # Content type for bonus points.
+];
+				
+			print $remasterTitle;
+			if($remasterYear eq '')
         		{
+				print "Starting Original Release upload\n";
 				$mech -> get($add_format_url);
-				$mech->tick("remaster",'on');
-				$mech->submit_form(
-				form_id => 'upload_table',
-				fields =>
-				{
-				file=>$username,
-				remaster=>$password
-				});
-		
+				
+				$mech->form_id('upload_table');
+				$mech->field('file_input', $uploadFile);
+				$mech->field('format', 'MP3');
+				$mech->field('bitrate', $bitrateDropdown);
+				$mech->field('media', $media);
+				
+				$mech->submit();
 			}
 			else
        			{
-
-       			}
+       				print "Starting upload of torrent with edition information\n";
+				$mech -> get($add_format_url);
+				
+                                $mech->form_id('upload_table');
+                                $mech->tick("remaster", 'on');
+				$mech->field('file_input', $uploadFile);
+                                $mech->field('remaster_year', $remasterYear);
+                                $mech->field('remaster_title', $remasterTitle);
+                                $mech->field('remaster_record_label', $remasterRecordLabel);
+                                $mech->field('remaster_catalogue_number', $remasterCatalogueNumber);
+                                $mech->select('format', 'MP3');
+                                $mech->select('bitrate', $bitrateDropdown);
+                                $mech->select('media', $media);
+                                
+				
+				$mech->submit();
+				print $mech->content();
+				#$mech->click_button(id => 'post'); 
+				#$mech->click('post');
+			}
 			#move torrent to watch/torrent folder
 			my $torrentFileFinal = $torrentdir . $torrentFile;
-			#print $torrentFile;
-			#print $torrentFileFinal;
-			my $mvCmd = "\"" . $torrentFile . "\" \"" . $torrentFileFinal . "\"";
-			`mv $mvCmd`;
+			
+			#my $mvCmd = "\"" . $torrentFile . "\" \"" . $torrentFileFinal . "\"";
+			#`mv $mvCmd`;
 		}
 	}
 }
