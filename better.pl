@@ -136,7 +136,7 @@ sub process
         V0 => '0',
         V2 => '0',
         );
-	print Dumper $group;
+	#print Dumper $group;
 
         for my $torrents( @{$group->{'response'}{'torrents'}} )
         {
@@ -196,7 +196,7 @@ sub process
 	{
 
 		my $bitrateDropdown = '';
-		print "key: $key | value: $existing_encodes{$key}\n";
+		
 		if ($existing_encodes{$key} == 0)
 		{
 			if($key eq 'V0' || $key eq 'V2')
@@ -221,7 +221,10 @@ sub process
 			print $remasterTitle;
 			if($remasterYear == 0)
         		{
-				print "Starting Original Release upload\n";
+				print "Starting Original Release upload:\n";
+				print "Format: MP3\n";
+				print "Bitrate: $bitrateDropdown\n";
+				print "Media: $media\n";
 				$mech -> get($add_format_url);
 				
 				$mech->form_id('upload_table');
@@ -234,7 +237,11 @@ sub process
 			}
 			else
        			{
-       				print "Starting upload of torrent with edition information\n";
+       				print "Starting Edition Release upload:\n";
+				print "Edition: $remasterTitle\n";
+				print "Format: MP3\n";
+                                print "Bitrate: $bitrateDropdown\n";
+                                print "Media: $media\n";
 				$mech -> get($add_format_url);
 				
                                 $mech->form_id('upload_table');
@@ -250,7 +257,7 @@ sub process
                                 
 				
 				$mech->submit();
-				print $mech->content();
+				#print $mech->content();
 			}
 			#move torrent to watch/torrent folder
 			my $torrentFileFinal = $torrentdir . $torrentFile;
