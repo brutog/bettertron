@@ -68,53 +68,23 @@ sub getBetter
 }
 
 
-#This function takes hash ref as an argument. The hasref is basically a groupId JSON object in what.cd
-#it looks up the group, gets the original torrent for the flac you are seeding, and does a million
-#things I'm not going to describe at the moment. 
+#This function takes a groupId and torrentId as an argument and goes out and gets the appropriate JSON.
+#It finds the torrent which you have in the group and gets the torrent name for transcoding
+#Also gets all the edition information so we can put the transcodes on the right torrent.
 sub process
 {
 	my $groupId = $_[0];
 	my $torrentId = $_[1];
-        #my $groupName = $href->{'groupName'};
-        #my $downloadUrl = $href->{'downloadUrl'};
 
-	#print "Processing Album: $groupName\n";
         print "GroupID: $groupId\n";
         print "TorrentID: $torrentId\n\n";
 
-        #my $get_torrent_url = 'http://what.cd/' . $downloadUrl;
-        #print "Fetching URL: $get_torrent_url\n\n";
-
-        #$mech -> get($get_torrent_url);
-        #if (! open( FOUT, "> tmp.torrent"))
-        #{
-        #        die( "Could not create file: $!" );
-        #}
-        #binmode( FOUT ); # required for Windows. Who uses Windows?
-        #print( FOUT $mech->response->content() );
-        #close( FOUT );
-
-        #open FILE, "tmp.torrent" or die $!;
-        #binmode FILE;
-        #my ($buf, $data, $n);
-        #while (($n = read FILE, $data, 4) != 0)
-        #{
-        #        $buf .= $data;
-        #}
-        #close(FILE);
-        #my $bencoded = $buf;
-        #my $torrent = bdecode ($bencoded, "true");
-        #my $torrentName = $torrent->{info}->{name};
-        #print "Torrent name from torrent file: $torrentName\n";
-
-        #unlink('tmp.torrent');
 
         my $group_url = 'http://what.cd/ajax.php?action=torrentgroup&id=' . $groupId . '&auth=' . $authkey;
         $mech -> get($group_url);
         my $group = decode_json($mech -> content());
 
 
-        #print Dumper $group;
         my $remasterTitle = '';
 	my $remasterYear = '';
 	my $remasterRecordLabel = '';
