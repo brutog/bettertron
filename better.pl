@@ -114,7 +114,7 @@ sub process
 	my $remasterCatalogueNumber = '';
 	my $media = '';
 	my $torrentName = '';
-
+	
         for my $torrents( @{$group->{'response'}{'torrents'}} )
         {
                 if($torrents -> {'id'} eq $torrentId)
@@ -136,7 +136,7 @@ sub process
         V0 => '0',
         V2 => '0',
         );
-
+	print Dumper $group;
 
         for my $torrents( @{$group->{'response'}{'torrents'}} )
         {
@@ -219,16 +219,16 @@ sub process
 ];
 				
 			print $remasterTitle;
-			if($remasterYear eq '')
+			if($remasterYear == 0)
         		{
 				print "Starting Original Release upload\n";
 				$mech -> get($add_format_url);
 				
 				$mech->form_id('upload_table');
 				$mech->field('file_input', $uploadFile);
-				$mech->field('format', 'MP3');
-				$mech->field('bitrate', $bitrateDropdown);
-				$mech->field('media', $media);
+				$mech->select('format', 'MP3');
+				$mech->select('bitrate', $bitrateDropdown);
+				$mech->select('media', $media);
 				
 				$mech->submit();
 			}
@@ -251,14 +251,12 @@ sub process
 				
 				$mech->submit();
 				print $mech->content();
-				#$mech->click_button(id => 'post'); 
-				#$mech->click('post');
 			}
 			#move torrent to watch/torrent folder
 			my $torrentFileFinal = $torrentdir . $torrentFile;
 			
-			#my $mvCmd = "\"" . $torrentFile . "\" \"" . $torrentFileFinal . "\"";
-			#`mv $mvCmd`;
+			my $mvCmd = "\"" . $torrentFile . "\" \"" . $torrentFileFinal . "\"";
+			`mv $mvCmd`;
 		}
 	}
 }
