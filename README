@@ -12,7 +12,9 @@ This project uses some pre-existing perl modules from CPAN. To install them in U
 
 sudo perl -MCPAN -e 'install WWW::Mechanize, JSON, JSON::XS, Data::Dumper, Config::IniFiles, Bencode'
 ---------------------------------------------------------------------
-After that, simply fill out the values in better.ini:
+After that, simply run the better.pl script once. It will generate a config file called better.ini
+
+Please fill it out:
 
 username and password refer to your what.cd username and password
 
