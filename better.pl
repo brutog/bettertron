@@ -161,7 +161,7 @@ sub process
 	else
         {
                 print "Running transcode with these options: $command\n";
-                #system($command);
+                system($command);
         }
         my $addformat_url = "http://what.cd/upload.php?groupid=" . $groupId;
         $mech -> get($addformat_url);
