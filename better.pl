@@ -17,6 +17,28 @@ our $torrentdir;
 our $passkey;
 our $authkey;
 
+sub chkCfg
+{
+	unless (-e 'better.ini')
+	{
+ 		print "Your are running Bettertron for the first time!\n";
+		print "Creating config file \"better.ini\"\n";
+		print "Please read the README for how to fill out the config\n";
+		open (MYFILE, '>>better.ini');
+ 		print MYFILE <<ENDHTML;
+[user]
+username=
+password=
+
+[dirs]
+torrentdir=/blah/example/
+flacdir=/look/another/
+transcodedir=/fill/this/in/with/trailing/slashes/
+ENDHTML
+ 		close (MYFILE);
+	}
+}
+
 sub getCfgValues
 {
 	#init config reading object
@@ -30,6 +52,7 @@ sub getCfgValues
 	$flacdir = $cfg -> val('dirs', 'flacdir');
 	$transcodedir = $cfg -> val('dirs', 'transcodedir');
 	$torrentdir = $cfg -> val('dirs', 'torrentdir');
+
 }
 
 
@@ -255,6 +278,7 @@ if(@ARGV == 1 && $ARGV[0] !~ m/^http:\/\//)
 	print "usage: argument does not appear to be a URL";
 	exit;	
 }
+chkCfg();
 getCfgValues();
 initWeb();
 my $better = getBetter();
