@@ -187,7 +187,7 @@ sub process
 	else
         {
                 print "Running transcode with these options: $command\n";
-                #system($command);
+                system($command);
         }
         my $addformat_url = "http://what.cd/upload.php?groupid=" . $groupId;
         $mech -> get($addformat_url);
@@ -195,21 +195,44 @@ sub process
 
         #time to do the form post for uploading the torrent
         #if $remasterTitle is blank, we don't have to fill out edition info.
-        #if($remasterTitle = '')
-        #{
+        while ( (my $key, my $value) = each %existing_encodes )
+	{
 
+		my $formDropdown;
+		
+		if ($existing_encodes{$key} == 0)
+		{
+			$formDropdown = $key . "(VBR)";	
+			#determine torrent file name
+			my $torrentFile = $torrentName . " (" . $key . ").torrent";
 
-#               $mech->submit_form(
-#               form_id => 'upload_table',
-#               fields =>
-#               {
-#               username=>$username,
-#               password=>$password
-#               }
-#       else
-#       {
+			my $add_format_url = "http://what.cd/upload.php?groupid=" . $groupId;
+			
+			if($remasterTitle eq '')
+        		{
+				$mech -> get($add_format_url);
+				$mech->tick("remaster",'on');
+				$mech->submit_form(
+				form_id => 'upload_table',
+				fields =>
+				{
+				file=>$username,
+				remaster=>$password
+				});
+		
+			}
+			else
+       			{
 
-#       }
+       			}
+			#move torrent to watch/torrent folder
+			my $torrentFileFinal = $torrentdir . $torrentFile;
+			#print $torrentFile;
+			#print $torrentFileFinal;
+			my $mvCmd = "\"" . $torrentFile . "\" \"" . $torrentFileFinal . "\"";
+			`mv $mvCmd`;
+		}
+	}
 }
 
 

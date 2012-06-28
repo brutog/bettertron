@@ -11,6 +11,7 @@ use WWW::Mechanize;
 use JSON -support_by_pp;
 use JSON qw( decode_json );
 use Data::Dumper;
+use Cwd;
 use Getopt::Long;
 Getopt::Long::Configure("permute");
 
@@ -36,6 +37,9 @@ my $password = $cfg -> val('user', 'password');
 # Output folder unless specified: ("/home/samuel/Desktop/")
 $output = $cfg -> val('dirs', 'transcodedir');
 $torrent_dir = $cfg -> val('dirs', 'torrentdir');
+
+my $pwd = getcwd();
+
 # Do you want to zeropad tracknumber values? (1 => 01, 2 => 02 ...)
 $zeropad = 1;
 
@@ -106,7 +110,7 @@ foreach my $flac_dir (@flac_dirs) {
 	
 	foreach my $lame_option (@lame_options) {
 		my $mp3_dir = $output . basename($flac_dir) . " ($lame_option)";
-		$mp3_dir =~ s/FLAC//g;
+		#$mp3_dir =~ s/FLAC//g;
 		mkpath($mp3_dir);
 		
 		print "\nEncoding with $lame_option started...\n" if $verbose;
@@ -163,7 +167,7 @@ foreach my $flac_dir (@flac_dirs) {
 	
 		if ($output and $passkey and not $notorrent) {
 			print "\nCreating torrent... ";
-			my $torrent_create = 'mktorrent -p -a http://tracker.what.cd:34000/' . $passkey . '/announce -o "' . $torrent_dir . basename($mp3_dir) . '.torrent" "' . $mp3_dir . '"';
+			my $torrent_create = 'mktorrent -p -a http://tracker.what.cd:34000/' . $passkey . '/announce -o "' . $pwd . '/' . basename($mp3_dir) . '.torrent" "' . $mp3_dir . '"';
 			print "'$torrent_create'\n";
 			system($torrent_create);
 		}
