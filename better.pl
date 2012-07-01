@@ -82,14 +82,30 @@ sub initWeb
 #http://what.cd/forums.php?action=viewthread&threadid=66186&postid=3418797
 sub getBetter
 {
-	my $better_url = 'http://what.cd/ajax.php?action=better&method=single&authkey=' . $authkey;
+	#my $better_url = 'http://what.cd/ajax.php?action=better&method=single&authkey=' . $authkey;
+	my $better_url = 'http://what.cd/ajax.php?action=better&method=snatch&filter=seeding&authkey=' . $authkey;
 	$mech -> get($better_url);
-	my $better = decode_json($mech -> content());
+	my $better;
+	if($mech -> content() ne '')
+	{ 
+		$better = decode_json($mech -> content());
+	}
 	#print Dumper $better;
 
 	return $better;
 }
 
+#better.php scraper until we have a JSON dump
+sub getBetterScrape
+{
+	my $better_url = 'http://what.cd/better.php?method=snatch&filter=seeding';
+	$mech -> get($better_url);
+	my @links = $mech->find_all_links ( 
+                                     url_regex => qr{torrents\.php\?id=}
+                                );
+	return @links;
+
+}
 
 #This function takes a groupId and torrentId as an argument and goes out and gets the appropriate JSON.
 #It finds the torrent which you have in the group and gets the torrent name for transcoding
@@ -296,8 +312,10 @@ if(@ARGV == 1)
 	
 	process($groupId, $torrentId);
 }
-else
+elsif (@ARGV == 0 && defined $better)
 {
+	print "Using JSON API for better.php source\n";
+
 	for my $href ( @{$better->{'response'}} )
 	{
 	
@@ -308,4 +326,34 @@ else
 		sleep 2;
 		print "-----------------------------------------------------------\n";
 	}	
+}
+else
+{
+	my @betterScrape = getBetterScrape();	
+	#print Dumper(\@betterScrape);
+	
+	print "JSON API did not return an answer. Fall back to scraping better.php directly\n";
+
+	foreach (@betterScrape)
+	{
+		my $scrapeUrl;
+		foreach (@$_)
+		{
+			my $tmp;
+			if(defined $_)
+			{
+				$tmp = $_;
+				if($tmp =~ m/torrents\.php\?id=/)
+                        	{
+                                	$scrapeUrl = $_;
+                                	#print "$scrapeUrl\n";
+					my $groupId = (split('&',(split('=', $scrapeUrl))[1]))[0];
+        				my $torrentId = (split('=', $scrapeUrl))[2];
+					#print "$groupId $torrentId\n";
+					process($groupId, $torrentId);
+                        	}
+			}
+
+		}
+	}
 }
