@@ -119,7 +119,7 @@ sub process
 	my $torrentId = $_[1];
 
         print "GroupID: $groupId\n";
-        print "TorrentID: $torrentId\n\n";
+        print "TorrentID: $torrentId\n";
 
 
         my $group_url = 'http://what.cd/ajax.php?action=torrentgroup&id=' . $groupId . '&auth=' . $authkey;
@@ -149,7 +149,7 @@ sub process
 
         }
 	print "RemasterTitle: $remasterTitle\n";
-	print "TorrentName: $torrentName\n";
+	print "TorrentName: $torrentName\n\n";
 	my %existing_encodes =
         (
         320 => '0',
@@ -208,7 +208,7 @@ sub process
         }
         my $addformat_url = "http://what.cd/upload.php?groupid=" . $groupId;
         $mech -> get($addformat_url);
-
+	print "\n";
 	print "Finished transcoding $torrentName\n";
 
         #time to do the form post for uploading the torrent
@@ -239,9 +239,9 @@ sub process
     			'Content-type' => 'text/plain' # Content type for bonus points.
 ];
 				
-			print $remasterTitle;
 			if($remasterYear == 0)
         		{
+				print "\n";
 				print "Starting Original Release upload:\n";
 				print "Format: MP3\n";
 				print "Bitrate: $bitrateDropdown\n";
@@ -337,7 +337,7 @@ else
 	my @betterScrape = getBetterScrape();	
 	#print Dumper(\@betterScrape);
 	
-	print "JSON API did not return an answer. Fall back to scraping better.php directly\n";
+	print "JSON API did not return an answer. Fall back to scraping better.php directly\n\n\n";
 
 	foreach (@betterScrape)
 	{
