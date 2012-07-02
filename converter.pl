@@ -12,6 +12,7 @@ use JSON -support_by_pp;
 use JSON qw( decode_json );
 use Data::Dumper;
 use Cwd;
+#use open IO  => ':locale';
 use Getopt::Long;
 Getopt::Long::Configure("permute");
 

@@ -7,6 +7,9 @@ use JSON qw( decode_json );
 use Data::Dumper;
 use Bencode qw(bdecode);
 use Config::IniFiles;
+#use open IO  => ':locale';
+use Encode;
+use HTML::Entities;
 
 our $mech = WWW::Mechanize->new();
 our $username;
@@ -136,7 +139,8 @@ sub process
                 if($torrents -> {'id'} eq $torrentId)
                 {
                         $remasterTitle = $torrents -> {'remasterTitle'};
-			$torrentName = $torrents -> {'filePath'};
+			$torrentName = decode_entities($torrents -> {'filePath'});
+			$torrentName = encode('UTF-8', $torrentName);
 			$remasterYear = $torrents -> {'remasterYear'};
 			$remasterRecordLabel = $torrents -> {'remasterRecordLabel'};
 			$remasterCatalogueNumber = $torrents -> {'remasterCatalogueNumber'};
@@ -173,7 +177,7 @@ sub process
                 }
 
         }
-        my $command = "perl converter.pl ";
+        my $command = "./converter.pl ";
 
         if($existing_encodes{'320'} == 0)
         {
