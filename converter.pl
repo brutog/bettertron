@@ -12,6 +12,7 @@ use JSON -support_by_pp;
 use JSON qw( decode_json );
 use Data::Dumper;
 use Cwd;
+use threads;
 #use open IO  => ':locale';
 use Getopt::Long;
 Getopt::Long::Configure("permute");
@@ -89,6 +90,11 @@ sub process {
 	push(@flac_dirs, $arg);
 }
 
+sub msc
+{
+	system( @_ );
+}
+
 GetOptions('verbose' => \$verbose, 'notorrent' => \$notorrent, 'zeropad', => \$zeropad, 'moveother' => \$moveother, 'output=s' => \$output, 'passkey=s' => \$passkey, '<>' => \&process);
 
 $output =~ s'/?$'/' if $output;	# Add a missing /
@@ -115,7 +121,9 @@ foreach my $flac_dir (@flac_dirs) {
 		mkpath($mp3_dir);
 		
 		print "\nEncoding with $lame_option started...\n" if $verbose;
-	
+		
+		my @threads;
+		
 		foreach my $file (@files) {
 			my (%tags, $mp3_filename);
 			my $mp3_dir = $mp3_dir;
@@ -137,17 +145,23 @@ foreach my $flac_dir (@flac_dirs) {
 			}
 	
 			# Build the conversion script and do the actual conversion
-			my $flac_command = "flac -dc \"$file\" | lame $lame_options{$lame_option} " .
+			my $flac_command = "flac --totally-silent -dc \"$file\" | lame -S $lame_options{$lame_option} " .
 				'--tt "' . $tags{'TITLE'} . '" ' .
 				'--tl "' . $tags{'ALBUM'} . '" ' .
 				'--ta "' . $tags{'ARTIST'} . '" ' .
 				'--tn "' . $tags{'TRACKNUMBER'} . '" ' .
 				'--tg "' . $tags{'GENRE'} . '" ' .
 				'--ty "' . $tags{'DATE'} . '" ' .
-				'--add-id3v2 - "' . $mp3_filename . '" 2>&1';
+				'--add-id3v2 - "' . $mp3_filename . '" >/dev/null';
 				print "$flac_command\n" if $verbose;
-				system($flac_command);
+				push @threads, threads->create('msc', $flac_command);
+				#system($flac_command);
 		}
+		foreach (@threads)
+		{
+   			$_->join();
+		}
+
 	
 		print "\nEncoding with $lame_option finished...\n";
 	

@@ -209,6 +209,7 @@ sub process
         my $addformat_url = "http://what.cd/upload.php?groupid=" . $groupId;
         $mech -> get($addformat_url);
 
+	print "Finished transcoding $torrentName\n";
 
         #time to do the form post for uploading the torrent
         #if $remasterTitle is blank, we don't have to fill out edition info.
@@ -355,6 +356,7 @@ else
         				my $torrentId = (split('=', $scrapeUrl))[2];
 					#print "$groupId $torrentId\n";
 					process($groupId, $torrentId);
+					print "-----------------------------------------------------------\n";
                         	}
 			}
 
