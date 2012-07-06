@@ -21,3 +21,9 @@ username and password refer to your what.cd username and password
 torrentdir is where bettertron will create torrents for your transcodes
 flacdir is where bettertron will look for your already existing and seeded flacs
 transcodedir is where your flac transcodes will end up
+---------------------------------------------------------------------
+TODO:
+
+*Handle torrent upload errors more gracefully (had a couple rejected due to thumb.db restriction. 
+Imagine 1982/original release/CD media will be a problem also)
+*Better error or unexpected condition handling.
