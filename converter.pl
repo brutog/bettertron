@@ -179,7 +179,43 @@ foreach my $flac_dir (@flac_dirs) {
 				}
 			}, no_chdir => 1 }, $flac_dir);
 		}
-	
+		#find all our new files in the transcode dir
+		
+		my $fileString = `find '$mp3_dir' -type f -name '*'`;
+		my @filesTranscode = split('\n', $fileString);
+
+
+		#Remove all valid files from our list, leaving blacklisted ones we should delete
+		@filesTranscode = grep {!/.accurip$/} @filesTranscode;
+		@filesTranscode = grep {!/.ac3$/} @filesTranscode;
+		@filesTranscode = grep {!/.cue$/} @filesTranscode;
+		@filesTranscode = grep {!/.dts$/} @filesTranscode;
+		@filesTranscode = grep {!/.ffp$/} @filesTranscode;
+		@filesTranscode = grep {!/.flac$/} @filesTranscode;
+		@filesTranscode = grep {!/.gif$/} @filesTranscode;
+		@filesTranscode = grep {!/.jpeg$/} @filesTranscode;
+		@filesTranscode = grep {!/.jpg$/} @filesTranscode;
+		@filesTranscode = grep {!/.log$/} @filesTranscode;
+		@filesTranscode = grep {!/.m3u$/} @filesTranscode;
+		@filesTranscode = grep {!/.m3u8$/} @filesTranscode;
+		@filesTranscode = grep {!/.m4a$/} @filesTranscode;
+		@filesTranscode = grep {!/.md5$/} @filesTranscode;
+		@filesTranscode = grep {!/.mp3$/} @filesTranscode;
+		@filesTranscode = grep {!/.mp4$/} @filesTranscode;
+		@filesTranscode = grep {!/.nfo$/} @filesTranscode;
+		@filesTranscode = grep {!/.pdf$/} @filesTranscode;
+		@filesTranscode = grep {!/.pls$/} @filesTranscode;
+		@filesTranscode = grep {!/.png$/} @filesTranscode;
+		@filesTranscode = grep {!/.sfv$/} @filesTranscode;
+		@filesTranscode = grep {!/.txt$/} @filesTranscode;
+		
+		#actually delete them
+		foreach my $tranFile (@filesTranscode)
+		{
+			unlink($tranFile);
+		}
+		
+			
 		if ($output and $passkey and not $notorrent) {
 			print "\nCreating torrent... ";
 			my $torrent_create = 'mktorrent -p -a http://tracker.what.cd:34000/' . $passkey . '/announce -o "' . $pwd . '/' . basename($mp3_dir) . '.torrent" "' . $mp3_dir . '"';
