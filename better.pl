@@ -40,6 +40,8 @@ transcodedir=/fill/this/in/with/trailing/slashes/
 ENDHTML
  		close (MYFILE);
 	}
+	
+	exit 0;
 }
 
 sub getCfgValues
