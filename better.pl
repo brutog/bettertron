@@ -39,9 +39,10 @@ flacdir=/look/another/
 transcodedir=/fill/this/in/with/trailing/slashes/
 ENDHTML
  		close (MYFILE);
+		exit 0;
 	}
 	
-	exit 0;
+	
 }
 
 sub getCfgValues
@@ -307,6 +308,7 @@ if(@ARGV == 1 && $ARGV[0] !~ m/^http:\/\//)
 	exit;	
 }
 chkCfg();
+print "Done reading config file\n";
 getCfgValues();
 initWeb();
 my $better = getBetter();
