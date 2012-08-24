@@ -70,7 +70,7 @@ sub initWeb
 	$mech -> cookie_jar(HTTP::Cookies->new());
 	$mech -> get($login_url);
 	$mech->submit_form(
-	form_id => 'loginform',
+	form_number => 1,
 	fields =>
 	{
 	username=>$username,
@@ -308,8 +308,8 @@ if(@ARGV == 1 && $ARGV[0] !~ m/^http:\/\//)
 	exit;	
 }
 chkCfg();
-print "Done reading config file\n";
 getCfgValues();
+print "Done reading config file\n";
 initWeb();
 my $better = getBetter();
 
