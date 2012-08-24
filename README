@@ -12,7 +12,7 @@ apt-get install mktorrent flac lame
 ---------------------------------------------------------------------
 This project uses some pre-existing perl modules from CPAN. To install them in Ubuntu/debian (and probaly anything else) in one line:
 
-sudo perl -MCPAN -e 'install WWW::Mechanize, JSON, JSON::XS, Data::Dumper, Config::IniFiles, Bencode'
+sudo perl -MCPAN -e 'install WWW::Mechanize, JSON, JSON::XS, Data::Dumper, Config::IniFiles, Bencode, Crypt::SSLeay'
 ---------------------------------------------------------------------
 After that, simply run the better.pl script once. It will generate a config file called better.ini
 

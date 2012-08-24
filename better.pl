@@ -10,6 +10,7 @@ use Config::IniFiles;
 #use open IO  => ':locale';
 use Encode;
 use HTML::Entities;
+use Crypt::SSLeay;
 
 our $mech = WWW::Mechanize->new();
 our $username;
@@ -66,7 +67,7 @@ sub getCfgValues
 #Get our authkey for the API, passkey for torrent creation and so on.
 sub initWeb
 {
-	my $login_url = 'http://what.cd/ajax.php?action=index';
+	my $login_url = 'https://what.cd/ajax.php?action=index';
 	$mech -> cookie_jar(HTTP::Cookies->new());
 	$mech -> get($login_url);
 	$mech->submit_form(
