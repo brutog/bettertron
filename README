@@ -1,6 +1,4 @@
-bettertron is a tool that will scan your better.php. It will check a specified directory for your seeded FLACs
-and transcode them into the needed MP3 bitrates. It is edition aware and will transcode all the needed bitrates for the
-edition you are seeding, regardless of better.php.
+bettertron is a tool that will scan your better.php. It will check a specified directory for your seeded FLACs and transcode them into the needed MP3 bitrates. It is edition aware and will transcode all the needed bitrates for the edition you are seeding, regardless of better.php.
 ---------------------------------------------------------------------
 bettertron uses several command line tools that are expected to exist:
 
