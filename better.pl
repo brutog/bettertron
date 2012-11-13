@@ -359,6 +359,7 @@ else
                                 	#print "$scrapeUrl\n";
 					my $groupId = (split('&',(split('=', $scrapeUrl))[1]))[0];
         				my $torrentId = (split('=', $scrapeUrl))[2];
+					$torrentId = (split('#', $torrentId))[0];
 					#print "$groupId $torrentId\n";
 					process($groupId, $torrentId);
 					print "-----------------------------------------------------------\n";
