@@ -164,7 +164,7 @@ sub process
 
         for my $torrents( @{$group->{'response'}{'torrents'}} )
         {
-                if($torrents -> {'remasterTitle'} eq $remasterTitle)
+                if($torrents -> {'remasterTitle'} eq $remasterTitle && $torrents->{'remasterYear'} == $remasterYear)
                 {
                         if($torrents -> {'encoding'} eq '320')
                         {
@@ -303,7 +303,7 @@ if (@ARGV > 1 )
 	print "usage: ./better.pl OR ./better.pl  'http://what.cd/torrents.php?id=1000&torrentid=1000000'";
 	exit;
 }
-if(@ARGV == 1 && $ARGV[0] !~ m/^http:\/\//)
+if(@ARGV == 1 && $ARGV[0] !~ m/^https:\/\//)
 {
 	print "usage: argument does not appear to be a URL";
 	exit;	
