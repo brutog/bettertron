@@ -144,6 +144,7 @@ sub process
                 {
                         $remasterTitle = $torrents -> {'remasterTitle'};
 			$torrentName = decode_entities($torrents -> {'filePath'});
+			#handle special chars for most file systems? works on mine at least
 			$torrentName = encode('UTF-8', $torrentName);
 			$remasterYear = $torrents -> {'remasterYear'};
 			$remasterRecordLabel = $torrents -> {'remasterRecordLabel'};
@@ -164,7 +165,11 @@ sub process
 
         for my $torrents( @{$group->{'response'}{'torrents'}} )
         {
-                if($torrents -> {'remasterTitle'} eq $remasterTitle && $torrents->{'remasterYear'} == $remasterYear)
+                if($torrents -> {'remasterTitle'} eq $remasterTitle && 
+		$torrents->{'remasterYear'} == $remasterYear &&
+		$torrents->{'remasterCatalogueNumber'} eq $remasterCatalogueNumber &&
+		$torrents->{'remasterRecordLabel'} eq $remasterRecordLabel &&
+		$torrents->{'media'} eq $media)
                 {
                         if($torrents -> {'encoding'} eq '320')
                         {
