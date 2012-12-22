@@ -111,7 +111,7 @@ unless (@flac_dirs) {
 
 foreach my $flac_dir (@flac_dirs) {
 	my (@files, @dirs);
-	find( sub { push(@files, $File::Find::name) if ($File::Find::name =~ m/\.flac$/) }, $flac_dir);
+	find( sub { push(@files, $File::Find::name) if ($File::Find::name =~ m/\.flac$/i) }, $flac_dir);
 	
 	print "Using $flac_dir\n" if $verbose;
 	
@@ -169,7 +169,7 @@ foreach my $flac_dir (@flac_dirs) {
 			print "Moving other files... " if $verbose;
 			
 			find( { wanted => sub { 
-				if ($File::Find::name !~ m/\.flac$/) {
+				if ($File::Find::name !~ m/\.flac$/i) {
 					if ($File::Find::name =~ m!\Q$flac_dir\E/(.+)/.!) {
 						mkpath($mp3_dir . '/' . $1);
 						copy($File::Find::name, $mp3_dir . '/' . $1);
@@ -186,28 +186,28 @@ foreach my $flac_dir (@flac_dirs) {
 
 
 		#Remove all valid files from our list, leaving blacklisted ones we should delete
-		@filesTranscode = grep {!/.accurip$/} @filesTranscode;
-		@filesTranscode = grep {!/.ac3$/} @filesTranscode;
-		@filesTranscode = grep {!/.cue$/} @filesTranscode;
-		@filesTranscode = grep {!/.dts$/} @filesTranscode;
-		@filesTranscode = grep {!/.ffp$/} @filesTranscode;
-		@filesTranscode = grep {!/.flac$/} @filesTranscode;
-		@filesTranscode = grep {!/.gif$/} @filesTranscode;
-		@filesTranscode = grep {!/.jpeg$/} @filesTranscode;
-		@filesTranscode = grep {!/.jpg$/} @filesTranscode;
-		@filesTranscode = grep {!/.log$/} @filesTranscode;
-		@filesTranscode = grep {!/.m3u$/} @filesTranscode;
-		@filesTranscode = grep {!/.m3u8$/} @filesTranscode;
-		@filesTranscode = grep {!/.m4a$/} @filesTranscode;
-		@filesTranscode = grep {!/.md5$/} @filesTranscode;
-		@filesTranscode = grep {!/.mp3$/} @filesTranscode;
-		@filesTranscode = grep {!/.mp4$/} @filesTranscode;
-		@filesTranscode = grep {!/.nfo$/} @filesTranscode;
-		@filesTranscode = grep {!/.pdf$/} @filesTranscode;
-		@filesTranscode = grep {!/.pls$/} @filesTranscode;
-		@filesTranscode = grep {!/.png$/} @filesTranscode;
-		@filesTranscode = grep {!/.sfv$/} @filesTranscode;
-		@filesTranscode = grep {!/.txt$/} @filesTranscode;
+		@filesTranscode = grep {!/.accurip$/i} @filesTranscode;
+		@filesTranscode = grep {!/.ac3$/i} @filesTranscode;
+		@filesTranscode = grep {!/.cue$/i} @filesTranscode;
+		@filesTranscode = grep {!/.dts$/i} @filesTranscode;
+		@filesTranscode = grep {!/.ffp$/i} @filesTranscode;
+		@filesTranscode = grep {!/.flac$/i} @filesTranscode;
+		@filesTranscode = grep {!/.gif$/i} @filesTranscode;
+		@filesTranscode = grep {!/.jpeg$/i} @filesTranscode;
+		@filesTranscode = grep {!/.jpg$/i} @filesTranscode;
+		@filesTranscode = grep {!/.log$/i} @filesTranscode;
+		@filesTranscode = grep {!/.m3u$/i} @filesTranscode;
+		@filesTranscode = grep {!/.m3u8$/i} @filesTranscode;
+		@filesTranscode = grep {!/.m4a$/i} @filesTranscode;
+		@filesTranscode = grep {!/.md5$/i} @filesTranscode;
+		@filesTranscode = grep {!/.mp3$/i} @filesTranscode;
+		@filesTranscode = grep {!/.mp4$/i} @filesTranscode;
+		@filesTranscode = grep {!/.nfo$/i} @filesTranscode;
+		@filesTranscode = grep {!/.pdf$/i} @filesTranscode;
+		@filesTranscode = grep {!/.pls$/i} @filesTranscode;
+		@filesTranscode = grep {!/.png$/i} @filesTranscode;
+		@filesTranscode = grep {!/.sfv$/i} @filesTranscode;
+		@filesTranscode = grep {!/.txt$/i} @filesTranscode;
 		
 		#actually delete them
 		foreach my $tranFile (@filesTranscode)
