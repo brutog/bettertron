@@ -206,23 +206,39 @@ sub process
         $command .= $torrentName;
         $command .= "\"";
 
+	my $fullDir = $flacdir . $torrentName;
+	my $dirExists = undef;	
+
+	if(-d $fullDir)
+	{
+		$dirExists = 1;
+	}
+	else
+	{
+		$dirExists = 0;
+	}
+	
+
         if($existing_encodes{'320'} == 1 && $existing_encodes{'V0'} == 1 && $existing_encodes{'V2'} == 1)
         {
-                print "Nothing to transcode. V2, V0, and 320 exist";
+                print "Nothing to transcode. V2, V0, and 320 exist\n";
         }
+	elsif($dirExists == 0)
+	{
+		print "Cannot find directory to transcode. Skipping to next entry\n";
+	}
 	else
         {
                 print "Running transcode with these options: $command\n";
                 system($command);
+		print "Finished transcoding $torrentName\n";
         }
         my $addformat_url = "http://what.cd/upload.php?groupid=" . $groupId;
         $mech -> get($addformat_url);
-	print "\n";
-	print "Finished transcoding $torrentName\n";
 
         #time to do the form post for uploading the torrent
         #if $remasterTitle is blank, we don't have to fill out edition info.
-        while ( (my $key, my $value) = each %existing_encodes )
+        while ( ((my $key, my $value) = each %existing_encodes) && $dirExists == 1)
 	{
 
 		my $bitrateDropdown = '';
