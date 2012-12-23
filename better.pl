@@ -208,7 +208,8 @@ sub process
 
 	my $fullDir = $flacdir . $torrentName;
 	my $dirExists = undef;	
-
+	my $lossyMaster = 0;
+	
 	if(-d $fullDir)
 	{
 		$dirExists = 1;
@@ -216,6 +217,11 @@ sub process
 	else
 	{
 		$dirExists = 0;
+	}
+
+	if($remasterTitle ~= m/pre-emphasis/i)
+	{
+		$lossyMaster = 1;
 	}
 	
 
@@ -226,6 +232,10 @@ sub process
 	elsif($dirExists == 0)
 	{
 		print "Cannot find directory to transcode. Skipping to next entry\n";
+	}
+	elsif($lossyMaster == 1)
+	{
+		print "This FLAC appears to be a lossy master. Skipping to next entry\n";
 	}
 	else
         {
@@ -238,7 +248,7 @@ sub process
 
         #time to do the form post for uploading the torrent
         #if $remasterTitle is blank, we don't have to fill out edition info.
-        while ( ((my $key, my $value) = each %existing_encodes) && $dirExists == 1)
+        while ( ((my $key, my $value) = each %existing_encodes) && $dirExists == 1 && $lossyMaster == 0)
 	{
 
 		my $bitrateDropdown = '';
