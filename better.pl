@@ -219,7 +219,7 @@ sub process
 		$dirExists = 0;
 	}
 
-	if($remasterTitle ~= m/pre-emphasis/i)
+	if($remasterTitle =~ m/pre-emphasis/i)
 	{
 		$lossyMaster = 1;
 	}
