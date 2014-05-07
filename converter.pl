@@ -84,18 +84,20 @@ ARG: foreach my $arg (@ARGV) {
 	}
 }
 
-sub process {
-	my $arg = shift @_;
-	chop($arg) if $arg =~ m'/$';
-	push(@flac_dirs, $arg);
-}
+push(@flac_dirs,$ARGV[$#ARGV]);
+
+#sub process {
+	#my $arg = shift @_;
+	#chop($arg) if $arg =~ m'/$';
+	#push(@flac_dirs, $arg);
+#}
 
 sub msc
 {
 	system( @_ );
 }
 
-GetOptions('verbose' => \$verbose, 'notorrent' => \$notorrent, 'zeropad', => \$zeropad, 'moveother' => \$moveother, 'output=s' => \$output, 'passkey=s' => \$passkey, '<>' => \&process);
+#GetOptions('verbose' => \$verbose, 'notorrent' => \$notorrent, 'zeropad', => \$zeropad, 'moveother' => \$moveother, 'output=s' => \$output, 'passkey=s' => \$passkey, '<>' => \&process) or die("getopts bad");
 
 $output =~ s'/?$'/' if $output;	# Add a missing /
 
