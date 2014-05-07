@@ -12,7 +12,7 @@ use Encode;
 use HTML::Entities;
 use Crypt::SSLeay;
 
-our $mech = WWW::Mechanize->new();
+our $mech = WWW::Mechanize->new(timeout => 60 * 3);
 our $username;
 our $password;
 our $flacdir;
