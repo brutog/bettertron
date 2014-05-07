@@ -77,7 +77,7 @@ sub initWeb
 	username=>$username,
 	password=>$password
 	}
-	);
+	) || die("Failed to submit login form");
 	my $login_info = decode_json($mech -> content());
 	$passkey = $login_info->{'response'}{'passkey'};
 	$authkey = $login_info->{'response'}{'authkey'};
@@ -209,7 +209,7 @@ sub process
 	my $fullDir = $flacdir . $torrentName;
 	my $dirExists = undef;	
 	my $lossyMaster = 0;
-	
+	my $beforeCD = 0;
 	if(-d $fullDir)
 	{
 		$dirExists = 1;
@@ -224,6 +224,10 @@ sub process
 		$lossyMaster = 1;
 	}
 	
+	#if($remasterYear < 1982 && $media eq 'CD')
+	#{
+	#	$beforeCD = 1;
+	#}
 
         if($existing_encodes{'320'} == 1 && $existing_encodes{'V0'} == 1 && $existing_encodes{'V2'} == 1)
         {
@@ -237,6 +241,10 @@ sub process
 	{
 		print "This FLAC appears to be a lossy master. Skipping to next entry\n";
 	}
+	#elsif($beforeCD == 1)
+	#{
+	#	print "This is a FLAC that is marked as media CD before 1982. Skipping to next entry\n";
+	#}
 	else
         {
                 print "Running transcode with these options: $command\n";
