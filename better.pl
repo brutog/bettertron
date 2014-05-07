@@ -137,6 +137,12 @@ sub process
 	my $remasterCatalogueNumber = '';
 	my $media = '';
 	my $torrentName = '';
+
+	if($remasterTitle =~ m/empha/i)
+	{
+		print "Detecting possible pre-emphasis - Skipping torrent";
+		return;
+	}
 	
         for my $torrents( @{$group->{'response'}{'torrents'}} )
         {
