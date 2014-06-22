@@ -190,14 +190,16 @@ foreach my $flac_dir (@flac_dirs) {
 		#Remove all valid files from our list, leaving blacklisted ones we should delete
 		@filesTranscode = grep {!/.accurip$/i} @filesTranscode;
 		@filesTranscode = grep {!/.ac3$/i} @filesTranscode;
-		@filesTranscode = grep {!/.cue$/i} @filesTranscode;
+		#Removing cues makes sense
+		#@filesTranscode = grep {!/.cue$/i} @filesTranscode;
 		@filesTranscode = grep {!/.dts$/i} @filesTranscode;
 		@filesTranscode = grep {!/.ffp$/i} @filesTranscode;
 		@filesTranscode = grep {!/.flac$/i} @filesTranscode;
 		@filesTranscode = grep {!/.gif$/i} @filesTranscode;
 		@filesTranscode = grep {!/.jpeg$/i} @filesTranscode;
 		@filesTranscode = grep {!/.jpg$/i} @filesTranscode;
-		@filesTranscode = grep {!/.log$/i} @filesTranscode;
+		#removing log files makes sense
+		#@filesTranscode = grep {!/.log$/i} @filesTranscode;
 		@filesTranscode = grep {!/.m3u$/i} @filesTranscode;
 		@filesTranscode = grep {!/.m3u8$/i} @filesTranscode;
 		@filesTranscode = grep {!/.m4a$/i} @filesTranscode;
