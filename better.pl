@@ -378,7 +378,7 @@ elsif (@ARGV == 0 && defined $better)
 		my $torrentId = $href->{'torrentId'};
 		process($groupId, $torrentId);
 	
-		sleep 2;
+		sleep 10;
 		print "-----------------------------------------------------------\n";
 	}	
 }
@@ -407,6 +407,7 @@ else
 					$torrentId = (split('#', $torrentId))[0];
 					#print "$groupId $torrentId\n";
 					process($groupId, $torrentId);
+					sleep 10;
 					print "-----------------------------------------------------------\n";
                         	}
 			}
