@@ -63,11 +63,11 @@ sub getCfgValues
 }
 
 
-#this function will do our first login to what.cd. Get us persistence with cookies.
+#this function will do our first login to apollo.rip. Get us persistence with cookies.
 #Get our authkey for the API, passkey for torrent creation and so on.
 sub initWeb
 {
-	my $login_url = 'https://what.cd/ajax.php?action=index';
+	my $login_url = 'https://apollo.rip/ajax.php?action=index';
 	$mech -> cookie_jar(HTTP::Cookies->new());
 	$mech -> get($login_url);
 	$mech->submit_form(
@@ -86,11 +86,11 @@ sub initWeb
 
 #get our better.pbp JSON object. In the future should be configurable.
 #maybe even support the use of tags as per: 
-#http://what.cd/forums.php?action=viewthread&threadid=66186&postid=3418797
+#http://apollo.rip/forums.php?action=viewthread&threadid=66186&postid=3418797
 sub getBetter
 {
-	#my $better_url = 'http://what.cd/ajax.php?action=better&method=single&authkey=' . $authkey;
-	my $better_url = 'http://what.cd/ajax.php?action=better&method=snatch&filter=seeding&authkey=' . $authkey;
+	#my $better_url = 'http://apollo.rip/ajax.php?action=better&method=single&authkey=' . $authkey;
+	my $better_url = 'http://apollo.rip/ajax.php?action=better&method=snatch&filter=seeding&authkey=' . $authkey;
 	$mech -> get($better_url);
 	my $better;
 	if($mech -> content() ne '')
@@ -105,7 +105,7 @@ sub getBetter
 #better.php scraper until we have a JSON dump
 sub getBetterScrape
 {
-	my $better_url = 'http://what.cd/better.php?method=snatch&filter=seeding';
+	my $better_url = 'http://apollo.rip/better.php?method=snatch&filter=seeding';
 	$mech -> get($better_url);
 	my @links = $mech->find_all_links ( 
                                      url_regex => qr{torrents\.php\?id=}
@@ -126,7 +126,7 @@ sub process
         print "TorrentID: $torrentId\n";
 
 
-        my $group_url = 'http://what.cd/ajax.php?action=torrentgroup&id=' . $groupId . '&auth=' . $authkey;
+        my $group_url = 'http://apollo.rip/ajax.php?action=torrentgroup&id=' . $groupId . '&auth=' . $authkey;
         $mech -> get($group_url);
         my $group = decode_json($mech -> content());
 
@@ -257,7 +257,7 @@ sub process
                 system($command);
 		print "Finished transcoding $torrentName\n";
         }
-        my $addformat_url = "http://what.cd/upload.php?groupid=" . $groupId;
+        my $addformat_url = "http://apollo.rip/upload.php?groupid=" . $groupId;
         $mech -> get($addformat_url);
 
         #time to do the form post for uploading the torrent
@@ -280,7 +280,7 @@ sub process
 			#determine torrent file name
 			my $torrentFile = $torrentName . " (" . $key . ").torrent";
 
-			my $add_format_url = "http://what.cd/upload.php?groupid=" . $groupId;
+			my $add_format_url = "http://apollo.rip/upload.php?groupid=" . $groupId;
 			
 			my $uploadFile = [ 
     			$torrentFile,        # The file we are uploading to upload.
@@ -345,7 +345,7 @@ sub process
 #argument checks
 if (@ARGV > 1 )
 {
-	print "usage: ./better.pl OR ./better.pl  'http://what.cd/torrents.php?id=1000&torrentid=1000000'";
+	print "usage: ./better.pl OR ./better.pl  'http://apollo.rip/torrents.php?id=1000&torrentid=1000000'";
 	exit;
 }
 if(@ARGV == 1 && $ARGV[0] !~ m/^https:\/\//)

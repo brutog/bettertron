@@ -20,7 +20,7 @@ Getopt::Long::Configure("permute");
 my ($verbose, $notorrent, $zeropad, $moveother, $output, $passkey, $torrent_dir);
 
 ##############################################################
-# whatmp3 - Convert FLAC to mp3, create what.cd torrent.
+# whatmp3 - Convert FLAC to mp3, create apollo.rip torrent.
 # Created by shardz (logik.li)
 # Based on: Flac to Mp3 Perl Converter by Somnorific
 # Which was based on: Scripts by Falkano and Nick Sklaventitis
@@ -46,7 +46,7 @@ my $pwd = getcwd();
 $zeropad = 1;
 
 # Specify torrent passkey
-my $login_url = 'http://what.cd/ajax.php?action=index';
+my $login_url = 'http://apollo.rip/ajax.php?action=index';
 my $mech = WWW::Mechanize->new();
 $mech -> cookie_jar(HTTP::Cookies->new());
 $mech -> get($login_url);
@@ -119,7 +119,8 @@ foreach my $flac_dir (@flac_dirs) {
 	
 	foreach my $lame_option (@lame_options) {
 		my $mp3_dir = $output . basename($flac_dir) . " ($lame_option)";
-		#$mp3_dir =~ s/FLAC//g;
+		#my $mp3_dir = $output . basename($flac_dir);
+		#$mp3_dir =~ s/FLAC/$lame_option/ig;
 		mkpath($mp3_dir);
 		
 		print "\nEncoding with $lame_option started...\n" if $verbose;
@@ -222,7 +223,7 @@ foreach my $flac_dir (@flac_dirs) {
 			
 		if ($output and $passkey and not $notorrent) {
 			print "\nCreating torrent... ";
-			my $torrent_create = 'mktorrent -p -a http://tracker.what.cd:34000/' . $passkey . '/announce -o "' . $pwd . '/' . basename($mp3_dir) . '.torrent" "' . $mp3_dir . '"';
+			my $torrent_create = 'mktorrent -p -a http://tracker.apollo.rip:34000/' . $passkey . '/announce -o "' . $pwd . '/' . basename($mp3_dir) . '.torrent" "' . $mp3_dir . '"';
 			print "'$torrent_create'\n";
 			system($torrent_create);
 		}
