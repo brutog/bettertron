@@ -12,7 +12,7 @@ use Encode;
 use HTML::Entities;
 use Crypt::SSLeay;
 
-our $mech = WWW::Mechanize->new(timeout => 60 * 3);
+our $mech = WWW::Mechanize->new(timeout => 60 * 3, agent => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36');
 our $username;
 our $password;
 our $flacdir;
@@ -69,7 +69,9 @@ sub initWeb
 {
 	my $login_url = 'https://apollo.rip/ajax.php?action=index';
 	$mech -> cookie_jar(HTTP::Cookies->new());
+	#print Dumper $mech;
 	$mech -> get($login_url);
+	#print Dumper $mech;
 	$mech->submit_form(
 	form_number => 1,
 	fields =>
@@ -129,8 +131,8 @@ sub process
         my $group_url = 'http://apollo.rip/ajax.php?action=torrentgroup&id=' . $groupId . '&auth=' . $authkey;
         $mech -> get($group_url);
         my $group = decode_json($mech -> content());
-
-
+	#print Dumper $group;
+	
         my $remasterTitle = '';
 	my $remasterYear = '';
 	my $remasterRecordLabel = '';

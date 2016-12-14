@@ -36,7 +36,7 @@ $moveother = 1;
 my $username = $cfg -> val('user', 'username');
 my $password = $cfg -> val('user', 'password');
 
-# Output folder unless specified: ("/home/samuel/Desktop/")
+# Output folder unless specified
 $output = $cfg -> val('dirs', 'transcodedir');
 $torrent_dir = $cfg -> val('dirs', 'torrentdir');
 
