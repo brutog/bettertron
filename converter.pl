@@ -223,7 +223,7 @@ foreach my $flac_dir (@flac_dirs) {
 			
 		if ($output and $passkey and not $notorrent) {
 			print "\nCreating torrent... ";
-			my $torrent_create = 'mktorrent -p -a http://tracker.apollo.rip:34000/' . $passkey . '/announce -o "' . $pwd . '/' . basename($mp3_dir) . '.torrent" "' . $mp3_dir . '"';
+			my $torrent_create = 'mktorrent -p -a http://apollo.rip:2095/' . $passkey . '/announce -o "' . $torrent_dir . '/' . basename($mp3_dir) . '.torrent" "' . $mp3_dir . '"';
 			print "'$torrent_create'\n";
 			system($torrent_create);
 		}
