@@ -18,7 +18,7 @@ After that, simply run the better.pl script once. It will generate a config file
 
 Please fill it out:
 
-username and password refer to your what.cd username and password
+username and password refer to your apollo.rip username and password
 
 torrentdir is where bettertron will create torrents for your transcodes
 flacdir is where bettertron will look for your already existing and seeded flacs
