@@ -134,9 +134,12 @@ foreach my $flac_dir (@flac_dirs) {
 				$mp3_dir .= '/' . $1;
 				mkpath($mp3_dir);
 			}
+
+			$file =~ s/'/'\\''/g;
 	
 			foreach my $tag (qw/TITLE ALBUM ARTIST TRACKNUMBER GENRE COMMENT DATE/) {
-				($tags{$tag} = `metaflac --show-tag=$tag "$file" | awk -F = '{ printf(\$2) }'`) =~ s![:?/]!_!g;
+				($tags{$tag} = `metaflac --show-tag=$tag '$file' | awk -F = '{ printf(\$2) }'`) =~ s![:?/]!_!g;
+				 ($tags{$tag}) =~ s/'/'\\''/g;
 			}
 			
 			$tags{'TRACKNUMBER'} =~ s/^(?!0|\d{2,})/0/ if $zeropad;	# 0-pad tracknumbers, if desired.
@@ -144,18 +147,18 @@ foreach my $flac_dir (@flac_dirs) {
 			if ($tags{'TRACKNUMBER'} and $tags{'TITLE'}) {
 				$mp3_filename = $mp3_dir . '/' . $tags{'TRACKNUMBER'} . " - " . $tags{'TITLE'} . ".mp3";
 			} else {
-				$mp3_filename = $mp3_dir . '/' . basename($file) . ".mp3";
+				$mp3_filename = $mp3_dir . '/' . basename('$file') . ".mp3";
 			}
 	
 			# Build the conversion script and do the actual conversion
-			my $flac_command = "flac --totally-silent -dc \"$file\" | lame -S $lame_options{$lame_option} " .
-				'--tt "' . $tags{'TITLE'} . '" ' .
-				'--tl "' . $tags{'ALBUM'} . '" ' .
-				'--ta "' . $tags{'ARTIST'} . '" ' .
-				'--tn "' . $tags{'TRACKNUMBER'} . '" ' .
-				'--tg "' . $tags{'GENRE'} . '" ' .
-				'--ty "' . $tags{'DATE'} . '" ' .
-				'--add-id3v2 - "' . $mp3_filename . '" >/dev/null';
+			my $flac_command = "flac --totally-silent -dc \'$file\' | lame -S $lame_options{$lame_option} " .
+				'--tt \'' . $tags{'TITLE'} . '\' ' .
+				'--tl \'' . $tags{'ALBUM'} . '\' ' .
+				'--ta \'' . $tags{'ARTIST'} . '\' ' .
+				'--tn \'' . $tags{'TRACKNUMBER'} . '\' ' .
+				'--tg \'' . $tags{'GENRE'} . '\' ' .
+				'--ty \'' . $tags{'DATE'} . '\' ' .
+				'--add-id3v2 - \'' . $mp3_filename . '\' >/dev/null';
 				print "$flac_command\n" if $verbose;
 				push @threads, threads->create('msc', $flac_command);
 				#system($flac_command);
